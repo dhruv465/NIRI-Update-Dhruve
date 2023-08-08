@@ -1,11 +1,11 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Import the 'cors' module
+const cors = require('cors');
 const app = express();
 const PORT = 5001;
 
-app.use(cors()); // Use CORS middleware
+app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to the SQLite database
