@@ -93,7 +93,7 @@ const Registration = () => {
           <Stack sx={{ width: '100%' }} spacing={2}>
             <Alert severity="success" action={<IconButton onClick={() => setSuccessMessage('')}> <CloseIcon /> </IconButton>}>
               <AlertTitle>Success</AlertTitle>
-              {successMessage}<Link to="/submitted-data">Database</Link>
+              {successMessage}<Link to="/submitted-data">View Board</Link>
             </Alert>
           </Stack>
         )}
