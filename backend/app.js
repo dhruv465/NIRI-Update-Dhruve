@@ -59,6 +59,24 @@ app.post('/api/register', (req, res) => {
   );
 });
 
+app.get('/api/search', (req, res) => {
+  const searchTerm = req.query.searchTerm;
+
+  const query = `
+    SELECT * FROM users
+    WHERE First_Name LIKE ? OR Last_Name LIKE ? OR Email LIKE ? OR Phone_Number LIKE ? OR Gender LIKE ?
+  `;
+  const params = Array(5).fill(`%${searchTerm}%`);
+
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'Error searching data.' });
+    } else {
+      res.json(rows);
+    }
+  });
+});
+
 // Define an endpoint to fetch submitted data
 app.get('/api/get-submitted-data', (req, res) => {
   db.all('SELECT * FROM users', (err, rows) => {

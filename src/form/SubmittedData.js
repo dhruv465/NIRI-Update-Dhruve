@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Note the addition of 'Routes'
+import React, { useState, useEffect } from 'react';
+import { Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, TextField } from '@mui/material';
 
 const SubmittedData = () => {
   const [submittedData, setSubmittedData] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:5001/api/get-submitted-data')
@@ -14,9 +15,39 @@ const SubmittedData = () => {
       .catch(error => console.error('Error fetching submitted data:', error));
   }, []);
 
+  useEffect(() => {
+    const searchQuery = searchText ? `?searchTerm=${encodeURIComponent(searchText)}` : '';
+
+    fetch(`http://localhost:5001/api/search${searchQuery}`)
+      .then(response => response.json())
+      .then(data => {
+        setSubmittedData(data);
+      })
+      .catch(error => console.error('Error fetching submitted data:', error));
+  }, [searchText]);
+
+  const filteredData = submittedData.filter(row => {
+    return (
+      row.First_Name.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.Last_Name.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.Email.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.Phone_Number.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.Gender.toLowerCase().includes(searchText.toLowerCase())
+    );
+  });
+
   return (
     <div className="submitted-data-container">
       <h2>View Board</h2>
+      <div style={{ marginBottom: '10px' }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+        />
+      </div>
       <div className="table-scroll-container">
         <TableContainer component={Paper}>
           <Table>
